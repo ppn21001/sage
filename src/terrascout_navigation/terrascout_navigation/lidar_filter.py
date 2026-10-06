@@ -22,7 +22,7 @@ SENSOR_DATA_QOS = QoSProfile(
     depth=1,
 )
 
-MIN_RANGE_M = 0.5
+MIN_RANGE_M = 0.15
 _LIVOX_TAG_OFFSET = 16
 
 _LIVOX_NOISE_MASK = 0x3F
@@ -54,16 +54,54 @@ def _valid_mask(
 
     pts = np.frombuffer(data, dtype=np.dtype(fields))
 
-    finite = np.isfinite(pts["x"]) & np.isfinite(pts["y"]) & np.isfinite(pts["z"])
-    nonzero = (pts["x"] != 0.0) | (pts["y"] != 0.0) | (pts["z"] != 0.0)
+    # ------------- test --------------------------------------------
 
-    range_sq = pts["x"] ** 2 + pts["y"] ** 2 + pts["z"] ** 2
+    x = pts["x"]
+    y = pts["y"]
+    z = pts["z"]
+
+    # Remove NaN and infinity.
+    finite = np.isfinite(x) & np.isfinite(y) & np.isfinite(z)
+
+    # Remove zero / invalid returns.
+    nonzero = (x != 0.0) | (y != 0.0) | (z != 0.0)
+
+    # Minimum LiDAR range.
+    range_sq = x**2 + y**2 + z**2
     beyond_blind = range_sq > min_range_sq
 
-    mask = finite & nonzero & beyond_blind
+    # Remove points belonging to the robot itself.
+    # Coordinates are relative to lidar_link.
+    inside_robot = (
+        (x >= -0.60)
+        & (x <= 0.40)
+        & (y >= -0.45)
+        & (y <= 0.45)
+        & (z >= -0.55)
+        & (z <= -0.05)
+    )
+
+    mask = finite & nonzero & beyond_blind & ~inside_robot
 
     if has_tag:
         mask &= (pts["tag"] & _LIVOX_NOISE_MASK) == 0
+
+
+    # ------------------------------ test ------------------------------------------
+
+
+    # OLD version of the code, kept for reference
+
+    # finite = np.isfinite(pts["x"]) & np.isfinite(pts["y"]) & np.isfinite(pts["z"])
+    # nonzero = (pts["x"] != 0.0) | (pts["y"] != 0.0) | (pts["z"] != 0.0)
+
+    # range_sq = pts["x"] ** 2 + pts["y"] ** 2 + pts["z"] ** 2
+    # beyond_blind = range_sq > min_range_sq
+
+    # mask = finite & nonzero & beyond_blind
+
+    # if has_tag:
+    #     mask &= (pts["tag"] & _LIVOX_NOISE_MASK) == 0
 
     return mask
 

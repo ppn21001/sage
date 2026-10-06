@@ -139,6 +139,14 @@ RUN pip install --break-system-packages --no-cache-dir \
 RUN git config --system --add safe.directory '*' && \
     ln -s /workspace/src/third_party/PX4-Autopilot /opt/px4
 
+
+
+COPY docker/nav2_cpu_fix/libmppi_controller.so \ 
+    /opt/ros/${ROS_DISTRO}/lib/libmppi_controller.so
+
+COPY docker/nav2_cpu_fix/libmppi_critics.so \
+    /opt/ros/${ROS_DISTRO}/lib/libmppi_critics.so
+
 FROM base AS physical
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \

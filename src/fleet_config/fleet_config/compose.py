@@ -257,3 +257,5 @@ def compose(fleet: Fleet, units: list[UnitContext], instance: Instance) -> dict[
     if fleet_host and fleet.features.madum_enabled:
         services[MOSQUITTO_SERVICE] = _mosquitto_service(fleet)
     return {"services": services}
+
+
