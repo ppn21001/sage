@@ -20,6 +20,8 @@
 
 3. # To install STVL, this was changed in Dockerfile and Makefile
 
+    Add git link in third_party.repos
+
     See comments in Dockerfile (line 33-50).
 
     In Makefile:
