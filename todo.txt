@@ -1,3 +1,50 @@
-1. Abort and move home
-2. select ordered or find shortest waypoint-path
-3. "3D"-costmaps
+1. Fix uneven terrain - DONE
+2. Abort and move home
+3. select ordered or find shortest waypoint-path
+4. "3D"-costmaps
+
+
+
+#################################### Costmap notes ############################################
+
+1. Why 2D costmaps are not enough?
+    * Conventional 2D occupancy costmaps mainly answers;
+        "Is this XY location occupied?"
+
+    * For uneven outdoor terrain, that is not sufficient.
+
+    * The UGV really need to know:
+        "Can this vehicle safely drive through this XY location?"
+
+    * A terrain-aware map therefore needs more info than occupied/free
+
+
+    
+    E.G., A hillside may contain alot of LiDAR returns but still be perfectly traversable.
+          Conversely, a ditch may contain few or no LiDAR returns and therefore look deceptively free.
+
+
+          | Terrain property                | Why it matters                                                |
+          |---------------------------------|---------------------------------------------------------------|
+          | Elevation                       | Basic terrain surface shape                                   |
+          | Slope                           | Determines climbability / rollover risk                       |
+          | Cross-slope                     | Particularly important for roll stability                     |
+          | Roughness                       | Indicates uneven or difficult ground                          |
+          | Step height                     | Determines whether wheels can climb an obstacle               |
+          | Drop-off / discontinuity        | Detects cliffs, ditches, holes                                |
+          | Vegetation / obstacle structure | Helps distinguish soft vegetation from solid objects          |
+          | Uncertainty                     | Indicates whether the terrain estimate is reliable            |
+          | Traversability                  | Combined assessment of how suitable the terrain is for the UGV|
+
+
+2. Do we need a full 3D costmap?
+
+    * Generally, no for the current wheeled UGV problem
+        A better divison is: 3D word > 3D LiDAR perception > 2.5 terrain represantation > 2D terrain-aware navigation costmap
+
+    * A 2.5D map associates terrain info with each XY location:
+        (x,y) -> [z, slope, roughness, step, Uncertainty, traversability]
+
+        which then converts to ordinary Nav2 cost range
+
+        e.g., C(x,y)=w_s C_{\text{slope}}+w_r C_{\text{roughness}}+w_h C_{\text{step}}+w_u C_{\text{unknown}}+w_o C_{\text{obstacle}}

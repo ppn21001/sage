@@ -166,11 +166,11 @@ _build-mode:
 		--workdir /workspace \
 		$(WORKSPACE_MOUNTS) \
 		-e CCACHE_DIR=/workspace/.ccache \
-		-e CC="ccache gcc" -e CXX="ccache g++" \
+		-e CC=gcc -e CXX=g++ \
 		--entrypoint bash $(BUILD_IMAGE):latest -c " \
 		source /opt/ros/$(ROS_DISTRO)/setup.bash && \
 		$(FIXPOSITION_SETUP) \
-		colcon build $(COLCON_INSTALL) --parallel-workers $$(nproc) $(COLCON_SKIP) --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON && \
+		colcon build $(COLCON_INSTALL) --parallel-workers $$(nproc) $(COLCON_SKIP) --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache && \
 		source install/setup.bash && \
 		colcon test --base-paths $(FIRST_PARTY_PATHS) $(COLCON_SKIP) && \
 		colcon test-result --verbose \

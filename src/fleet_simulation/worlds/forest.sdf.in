@@ -116,10 +116,7 @@
       </link>
     </model>
 
-
-
-
-
+    
     <model name="forest_trees">
       <static>true</static>
       <pose>0 0 0 0 0 0</pose>

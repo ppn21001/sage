@@ -30,6 +30,9 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     python3-colcon-common-extensions \
     python3-scipy \
     "ros-${ROS_DISTRO}-ament-cmake-python" \
+    # NEW: needed to install stvl
+    "ros-${ROS_DISTRO}-ament-cmake-vendor-package" \
+    # ---------------------------
     "ros-${ROS_DISTRO}-ament-package" \
     "ros-${ROS_DISTRO}-navigation2" \
     "ros-${ROS_DISTRO}-xacro" \
@@ -37,6 +40,14 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     "ros-${ROS_DISTRO}-foxglove-bridge" \
     "ros-${ROS_DISTRO}-foxglove-msgs" \
     "ros-${ROS_DISTRO}-mqtt-client" \
+    # ---------------------
+    libopenvdb-dev \
+    libblosc-dev \
+    libboost-iostreams-dev \
+    libboost-thread-dev \
+    libtbb-dev \
+    zlib1g-dev \
+    # --------------------
     libgtest-dev \
     libnanoflann-dev \
     "ros-${ROS_DISTRO}-pcl-conversions" \
