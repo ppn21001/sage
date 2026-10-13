@@ -19,6 +19,7 @@ THIRD_PARTY_DIR := src/third_party
 PX4_DIR := $(THIRD_PARTY_DIR)/PX4-Autopilot
 PX4_SUBMODULES := Tools/simulation/gz src/modules/zenoh/zenoh-pico
 PX4_ROS2_DIR := $(THIRD_PARTY_DIR)/px4-ros2-interface-lib
+FAST_LIO_DIR := $(THIRD_PARTY_DIR)/FAST_LIO_ROS2 # New
 RENDER_DIR := .sage/render/$(TARGET).$(SAGE_INSTANCE)
 RUN_DIR := .sage/run/$(SAGE_INSTANCE)
 RUN_RECORD := runs/$(shell date -u +%Y%m%dT%H%M%SZ)-$(TARGET).$(SAGE_INSTANCE)
@@ -57,7 +58,8 @@ define render_fleet
 rm -rf $(1) && mkdir -p $(1) && $(RENDERER) render --target "$(TARGET)" --instance "$(SAGE_INSTANCE)" --out $(1)
 endef
 
-PHYSICAL_ONLY_PKGS := terrascout_hardware livox_ros_driver2 livox_sdk2 gscam2 fpsdk_common fpsdk_apps fpsdk_ros2 fixposition_driver_lib fixposition_driver_ros2 fixposition_driver_msgs rtcm_msgs
+#PHYSICAL_ONLY_PKGS := terrascout_hardware livox_ros_driver2 livox_sdk2 gscam2 fpsdk_common fpsdk_apps fpsdk_ros2 fixposition_driver_lib fixposition_driver_ros2 fixposition_driver_msgs rtcm_msgs
+PHYSICAL_ONLY_PKGS := terrascout_hardware gscam2 fpsdk_common fpsdk_apps fpsdk_ros2 fixposition_driver_lib fixposition_driver_ros2 fixposition_driver_msgs rtcm_msgs
 SIMULATION_ONLY_PKGS := fleet_simulation
 FIRST_PARTY_PATHS := $(shell find src -mindepth 1 -maxdepth 1 -type d -not -name third_party)
 
@@ -134,6 +136,8 @@ build:
 		|| { echo "build failed: operation: import third_party.repos into $(THIRD_PARTY_DIR); cause: reported above" >&2; exit 1; }
 	@git -C $(PX4_DIR) submodule update --init --recursive $(PX4_SUBMODULES) \
 		|| { echo "build failed: operation: initialize PX4 submodules $(PX4_SUBMODULES); cause: reported above" >&2; exit 1; }
+	@git -C $(FAST_LIO_DIR) submodule update --init --recursive include/ikd-Tree \
+		|| { echo "build failed: operation: initialize FAST-LIO2 ikd-Tree submodule; cause: reported above" >&2; exit 1; }	
 	@for patch in $$(find patches -name '*.patch' | sort); do \
 		repo=$(THIRD_PARTY_DIR)/$$(dirname $${patch#patches/}); \
 		if git -C $$repo apply --reverse --check $(CURDIR)/$$patch 2>/dev/null; then \

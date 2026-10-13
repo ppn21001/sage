@@ -38,6 +38,11 @@
     - ^/<robot_namespace>/local_costmap/costmap$
     - ^/<robot_namespace>/map$
     - ^/<robot_namespace>/map_metadata$
+        # ---- FAST-LIO2 outputs ----------------
+    - ^/<robot_namespace>/fast_lio/cloud_registered$
+    - ^/<robot_namespace>/fast_lio/odometry$
+    - ^/<robot_namespace>/fast_lio/path$
+        # ------------------------------------
     - ^/<robot_namespace>/microstrain/imu/data$
     - ^/<robot_namespace>/microstrain/imu/mag$
     - ^/<robot_namespace>/navsat$
