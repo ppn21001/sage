@@ -69,6 +69,23 @@ PHYSICAL_ONLY
         added: 
             new FAST-LIO2 output topics to foxglove in foxglove_bridge.yaml (line 41-45) 
 
+        added:
+        in src/fleet_config/fleet_config/classes/terrascout.py this is added
+            FAST_LIO = "fast_lio" 
+        on line 63
+
+            FAST_LIO_SIM_CONFIG = SourceFile(NAVIGATION_PACKAGE,"config/fast_lio_sim.yaml")
+        on line 70
+
+            entries.append(fast_lio_simulation(unit))
+        on line 742
+
+            files["fast_lio_sim.yaml"] = FAST_LIO_SIM_CONFIG
+        on line 768
+
+        and function def fast_lio_simulation()
+        
+
 
 
 
