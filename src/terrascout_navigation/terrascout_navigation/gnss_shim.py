@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 
-from build.fast_lio.rosidl_generator_py.fast_lio import msg
 import rclpy
 from geometry_msgs.msg import TransformStamped
 from nav_msgs.msg import Odometry
@@ -11,8 +10,6 @@ from rclpy.parameter import Parameter
 from rclpy.qos import qos_profile_sensor_data
 from sensor_msgs.msg import NavSatFix
 from tf2_ros import StaticTransformBroadcaster, TransformBroadcaster
-from scipy.spatial.transform import Rotation
-import numpy as np
 
 from fleet_common import signals
 from fleet_common.params import declare
@@ -36,8 +33,8 @@ class GnssShimNode(Node):
         self.tf_broadcaster = TransformBroadcaster(self)
         self.static_tf_broadcaster = StaticTransformBroadcaster(self)
 
-        #self._odom_sub = self.create_subscription(Odometry, "odom_gt", self._odom_cb, 10)
-        #self._odom_sub = self.create_subscription(Odometry, "fast_lio/odometry", self._odom_cb, 10)
+        self._odom_sub = self.create_subscription(Odometry, "odom_gt", self._odom_cb, 10)
+
         self._navsat_sub = self.create_subscription(
             NavSatFix, "navsat", self._navsat_cb, qos_profile_sensor_data
         )
@@ -52,7 +49,7 @@ class GnssShimNode(Node):
         t.header.frame_id = FRAME_GLOBAL
         t.child_frame_id = FRAME_ODOM
         t.transform.rotation.w = 1.0
-        #self.static_tf_broadcaster.sendTransform(t)
+        self.static_tf_broadcaster.sendTransform(t)
 
     def _publish_datum(self):
         datum = NavSatFix(
