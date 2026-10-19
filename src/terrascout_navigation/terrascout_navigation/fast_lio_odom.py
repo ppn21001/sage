@@ -14,6 +14,8 @@ from tf2_ros import (
     TransformException,
     TransformListener,
 )
+from rclpy.parameter import Parameter
+from fleet_common.params import declare
 
 
 ODOM_FRAME = "odom"
@@ -112,15 +114,26 @@ class FastLioOdomAdapter(Node):
         # Filtered velocity estimate.
         self._filtered_twist = None
 
-        self.declare_parameter(
-            "velocity_smoothing_alpha",
-            0.35
-        )
+        # self.declare_parameter(
+        #     "velocity_smoothing_alpha",
+        #     0.35
+        # )
+
+        # self._alpha = float(
+        #     self.get_parameter(
+        #         "velocity_smoothing_alpha"
+        #     ).value
+        # )
 
         self._alpha = float(
-            self.get_parameter(
-                "velocity_smoothing_alpha"
-            ).value
+            declare(
+                self,
+                "velocity_smoothing_alpha",
+                Parameter.Type.DOUBLE,
+                "Weight of new velocity estimates in the exponential moving average; 1 disables smoothing",
+                0.01,
+                1.0,
+            )
         )
 
         if not 0.0 < self._alpha <= 1.0:

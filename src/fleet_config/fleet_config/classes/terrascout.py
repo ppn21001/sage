@@ -388,6 +388,12 @@ def fast_lio_odom_adapter(unit: UnitContext, after: list[str]) -> Process:
         executable="fast_lio_odom.py",
         node_name="fast_lio_odom_adapter",
         namespace=unit.namespace,
+
+        # Explicitly supply the parameter required by the adapter.
+        param_values={
+            "velocity_smoothing_alpha": 0.35,
+        },
+
         remaps=TF_REMAPS,
         after=after,
         ready=MessageProbe(f"/{unit.namespace}/odom"),
