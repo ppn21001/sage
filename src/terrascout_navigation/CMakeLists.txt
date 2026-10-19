@@ -7,6 +7,7 @@ find_package(ament_cmake_python REQUIRED)
 ament_python_install_package(${PROJECT_NAME})
 
 install(PROGRAMS
+  terrascout_navigation/fast_lio_odom.py
   terrascout_navigation/gnss_shim.py
   terrascout_navigation/lidar_filter.py
   terrascout_navigation/teleop_takeover.py

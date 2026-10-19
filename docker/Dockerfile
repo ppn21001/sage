@@ -61,6 +61,10 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     "ros-${ROS_DISTRO}-pcl-ros" \
     "ros-${ROS_DISTRO}-rclcpp-components" \
     "ros-${ROS_DISTRO}-rosidl-default-generators" \
+    # GridMap dependencies for CPU elevation mapping - Not sure where yet
+    "ros-${ROS_DISTRO}-grid-map-core" \
+    "ros-${ROS_DISTRO}-grid-map-ros" \
+    "ros-${ROS_DISTRO}-grid-map-msgs" \
     # ----------------------------------------------
     "ros-${ROS_DISTRO}-pcl-conversions" \
     "ros-${ROS_DISTRO}-twist-mux" \
@@ -186,7 +190,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     "ros-${ROS_DISTRO}-diff-drive-controller" \
     "ros-${ROS_DISTRO}-joint-state-broadcaster" \
     "ros-${ROS_DISTRO}-microstrain-inertial-driver" \
-    # These dependencies are needed for building FAST-LIO2
+    # These dependencies are needed for building FAST-LIO2 - they placed above instead
     #libapr1-dev \
     #libaprutil1-dev \
     libyaml-cpp-dev \

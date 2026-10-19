@@ -338,7 +338,7 @@ def lidar_filter(unit: UnitContext, name: str, after: list[str]) -> Process:
         ready=MessageProbe(f"/{unit.namespace}/lidar_points_filtered"),
     )
 
-# ---- New for FAST-LIO2 integration: Add a function to launch the FAST-LIO2 node in simulation mode ----
+# ---- New for FAST-LIO2 integration  ----------------------------------------------------------
 def fast_lio_simulation(unit: UnitContext) -> Process:
     namespace = unit.namespace
 
@@ -378,6 +378,19 @@ def fast_lio_simulation(unit: UnitContext) -> Process:
         ready=MessageProbe(
             f"/{namespace}/fast_lio/cloud_registered"
         ),
+    )
+
+
+def fast_lio_odom_adapter(unit: UnitContext, after: list[str]) -> Process:
+    return node(
+        "fast_lio_odom_adapter",
+        package=NAVIGATION_PACKAGE,
+        executable="fast_lio_odom.py",
+        node_name="fast_lio_odom_adapter",
+        namespace=unit.namespace,
+        remaps=TF_REMAPS,
+        after=after,
+        ready=MessageProbe(f"/{unit.namespace}/odom"),
     )
 # ---------------------------------------------------------------------------------------
 
@@ -740,6 +753,11 @@ def processes(unit: UnitContext) -> list[Process]:
         )
         # Start FAST-LIO2 after the Gazebo sensor bridge
         entries.append(fast_lio_simulation(unit))
+        # Start the odometry adapter after FAST-LIO2
+        entries.append(fast_lio_odom_adapter(unit, [FAST_LIO]))
+        # Make Nav2 wait for the odometry adapter
+        navigation_after.append("fast_lio_odom_adapter")
+
     entries.append(twist_mux(unit, [*stage_after, BATTERY] if simulated else stage_after))
     entries += teleop_processes(unit, stage_after)
     entries += foxglove_processes(unit, stage_after)

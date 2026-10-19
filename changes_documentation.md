@@ -44,7 +44,7 @@ PHYSICAL_ONLY
     Added git link in third_party.repos
 
     # In Dockerfile:
-        see comments on lines 53-64, and 189-191.
+        see comments on lines 53-64, and 193.
 
     # In Makefile:
         added:
@@ -60,30 +60,41 @@ PHYSICAL_ONLY
 	    	|| { echo "build failed: operation: initialize FAST-LIO2 ikd-Tree submodule; cause: reported above" >&2; exit 1; }
         on line 139-140
 
+    # Additional changes
         added:
             new folder and file; patches/FAST_LIO_ROS2/imu_qos.patch
 
         added:
             new file; terrascout_navigation/config/fast_lio_sim.yaml
 
+        added:
+            new file src/terrascout_navigation/terrascout_navigation/fast_lio_odom.py
+
         added: 
             new FAST-LIO2 output topics to foxglove in foxglove_bridge.yaml (line 41-45) 
 
         added:
         in src/fleet_config/fleet_config/classes/terrascout.py this is added
-            FAST_LIO = "fast_lio" 
-        on line 63
-
+            FAST_LIO = "fast_lio"
             FAST_LIO_SIM_CONFIG = SourceFile(NAVIGATION_PACKAGE,"config/fast_lio_sim.yaml")
-        on line 70
-
             entries.append(fast_lio_simulation(unit))
-        on line 742
-
             files["fast_lio_sim.yaml"] = FAST_LIO_SIM_CONFIG
-        on line 768
+            entries.append(fast_lio_odom_adapter(unit, [FAST_LIO]))
 
-        and function def fast_lio_simulation()
+            and 
+
+            function def fast_lio_simulation()
+            function def fast_lio_odom_adapter()
+
+        added: 
+            terrascout_navigation/fast_lio_odom.py in CMakeLists.txt
+
+        changed:
+            commented out mapping for /odom gazebo bridge (using fast-lio instead)
+
+
+
+
         
 
 
