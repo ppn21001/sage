@@ -22,7 +22,7 @@ from rclpy.serialization import deserialize_message
 from rosidl_runtime_py.utilities import get_message
 from scipy.spatial.transform import Rotation, Slerp
 
-LIO_TOPIC = "/terrascout1/fast_lio/odometry"
+LIO_TOPIC = "/terrascout1/odom"
 GT_TOPIC = "/terrascout1/odom_gt"
 
 

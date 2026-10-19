@@ -114,17 +114,6 @@ class FastLioOdomAdapter(Node):
         # Filtered velocity estimate.
         self._filtered_twist = None
 
-        # self.declare_parameter(
-        #     "velocity_smoothing_alpha",
-        #     0.35
-        # )
-
-        # self._alpha = float(
-        #     self.get_parameter(
-        #         "velocity_smoothing_alpha"
-        #     ).value
-        # )
-
         self._alpha = float(
             declare(
                 self,

@@ -86,7 +86,8 @@ class GnssShimNode(Node):
 
     def _odom_cb(self, msg):
         stamp = msg.header.stamp
-
+        # Using Fast-LIO2, we don't need to publish a transform from odom to base_link, as Fast-LIO2 already publishes the transform from map to base_link. However, if you want to publish the transform from odom to base_link, you can uncomment the following lines:
+        # t = TransformStamped()
         # t.transform.translation.x = msg.pose.pose.position.x
         # t.transform.translation.y = msg.pose.pose.position.y
         # t.transform.translation.z = msg.pose.pose.position.z

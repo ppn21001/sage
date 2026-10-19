@@ -91,6 +91,7 @@ PHYSICAL_ONLY
 
         changed:
             commented out mapping for /odom gazebo bridge (using fast-lio instead)
+            commented out a part in def _odom_cb in src/terrascout_navigation/terrascout_navigation/gnss_shim.py
 
 
 
